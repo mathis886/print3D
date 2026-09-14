@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Print3D Studio — Slicer</title>
+<style>
+:root{--bg:#080d18;--panel:#101827;--panel2:#151f31;--line:#263550;--text:#edf4ff;--muted:#8fa0ba;--accent:#72a7ff;--accent2:#8d7cff;--ok:#55d6a6}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#172747 0,#080d18 42%),#080d18;color:var(--text)}
+button,input,select{font:inherit}button{cursor:pointer}
+.top{height:68px;border-bottom:1px solid var(--line);background:#0b1220e8;backdrop-filter:blur(12px);display:flex;align-items:center;padding:0 24px;gap:26px;position:sticky;top:0;z-index:5}
+.brand{font-size:21px;font-weight:850;letter-spacing:-.4px}.brand b{color:var(--accent)}
+.nav{display:flex;gap:7px}.nav span{padding:8px 11px;color:var(--muted);font-size:13px;border-radius:8px}.nav span.active{background:var(--panel2);color:var(--text)}
+.topright{margin-left:auto;color:var(--muted);font-size:12px;display:flex;align-items:center;gap:10px}.dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok)}
+.layout{max-width:1450px;margin:auto;padding:20px;display:grid;grid-template-columns:270px minmax(420px,1fr) 310px;gap:16px}
+.panel{background:linear-gradient(180deg,#111a2aee,#0e1625ee);border:1px solid var(--line);border-radius:15px;box-shadow:0 18px 55px #0005;overflow:hidden}.pad{padding:17px}
+.title{font-size:14px;font-weight:750;margin-bottom:14px}.muted{color:var(--muted)}
+.upload{border:1px dashed #405273;background:#0c1423;border-radius:12px;padding:20px 13px;text-align:center;transition:.2s}.upload:hover{border-color:var(--accent);background:#101b30}
+.upload .icon{font-size:28px;margin-bottom:7px}.upload p{font-size:12px;color:var(--muted);line-height:1.5;margin:6px 0 13px}
+.btn{border:0;border-radius:9px;padding:10px 13px;font-weight:750;background:var(--accent);color:#071021}.btn.secondary{background:#172239;color:var(--text);border:1px solid #30415f}.btn.full{width:100%}
+.file{display:none}
+.section{border-top:1px solid var(--line);padding:16px 17px}.section:first-of-type{border-top:0}
+label{display:block;color:var(--muted);font-size:11px;margin:11px 0 6px}input[type=number],select{width:100%;background:#0b1321;color:var(--text);border:1px solid #2a3b59;border-radius:8px;padding:9px;outline:none}input:focus,select:focus{border-color:var(--accent)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.check{display:flex;align-items:center;gap:8px;margin-top:11px;color:#c4d0e4;font-size:12px}.check input{accent-color:var(--accent)}
+.viewer{height:620px;position:relative;background:radial-gradient(circle at 50% 45%,#20365e,#0a101c 66%);overflow:hidden}
+#view{width:100%;height:100%;display:block}.viewbar{position:absolute;left:14px;right:14px;top:13px;display:flex;justify-content:space-between;pointer-events:none}.pill{background:#091120c9;border:1px solid #2a3a57;border-radius:8px;padding:7px 9px;color:#b7c6de;font-size:11px}
+.viewcontrols{position:absolute;bottom:13px;left:14px;display:flex;gap:7px}.vbtn{pointer-events:auto;background:#0a1221dd;color:#cbd7ea;border:1px solid #2d3d5b;border-radius:8px;padding:7px 10px;font-size:11px}
+.bottom{border-top:1px solid var(--line);padding:12px 14px;display:flex;gap:10px;align-items:center}.progress{height:5px;background:#0a1220;border-radius:5px;overflow:hidden;flex:1}.progress i{display:block;width:0;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.3s}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stat{background:#0b1321;border:1px solid #23334e;border-radius:10px;padding:11px}.stat small{font-size:10px;color:var(--muted)}.stat strong{display:block;margin-top:4px;font-size:16px}
+.bigbtn{width:100%;padding:13px;border:0;border-radius:10px;background:linear-gradient(135deg,#72a7ff,#8d7cff);color:#071021;font-weight:850;margin-top:15px}
+.info{font-size:11px;color:var(--muted);line-height:1.55;margin-top:12px}
+.layer{margin-top:13px}.layerhead{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--accent)}
+.history{margin-top:16px}.historyitem{padding:10px 0;border-top:1px solid #20304a;font-size:11px}.historyitem strong{display:block}.badge{float:right;color:var(--ok);font-size:10px}
+.toast{position:fixed;right:20px;bottom:20px;background:#142039;border:1px solid #385075;color:#eaf2ff;padding:11px 14px;border-radius:10px;opacity:0;transform:translateY(8px);transition:.25s;z-index:10}.toast.show{opacity:1;transform:none}
+footer{text-align:center;color:#687995;font-size:11px;padding:0 20px 22px}
+@media(max-width:1100px){.layout{grid-template-columns:240px 1fr}.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}.viewer{height:560px}}
+@media(max-width:760px){.nav{display:none}.layout{grid-template-columns:1fr;padding:12px}.right{display:block}.viewer{height:430px}.top{padding:0 14px}.topright span{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="brand">Print3D <b>Studio</b></div>
+<nav class="nav"><span class="active">Slicer</span><span>Modèle</span><span>Historique</span></nav>
+<div class="topright"><i class="dot"></i><span>Mode local · aucune installation</span></div>
+</header>
+
+<main class="layout">
+<aside class="panel">
+<div class="section">
+<div class="title">Nouveau modèle</div>
+<div class="upload">
+<div class="icon">📦</div>
+<strong style="font-size:13px">Importer un modèle</strong>
+<p>STL binaire ou ASCII<br>Glisse ton fichier ici ou sélectionne-le.</p>
+<input id="file" class="file" type="file" accept=".stl">
+<button class="btn" onclick="file.click()">Choisir un STL</button>
+</div>
+<div style="font-size:11px;color:#8fa0ba;margin-top:10px" id="filename">Aucun fichier sélectionné</div>
+</div>
+
+<div class="section">
+<div class="title">Imprimante</div>
+<label>Profil</label><select id="printer"><option>FDM — 220 × 220 × 250 mm</option><option>FDM — 300 × 300 × 300 mm</option></select>
+<div class="row"><div><label>Buse (mm)</label><input id="nozzle" type="number" value=".4" step=".05"></div><div><label>Diamètre filament</label><input id="fd" type="number" value="1.75" step=".05"></div></div>
+</div>
+
+<div class="section">
+<div class="title">Qualité</div>
+<div class="row"><div><label>Couche (mm)</label><input id="layer" type="number" value=".20" min=".05" step=".05"></div><div><label>Parois</label><input id="walls" type="number" value="2" min="1" max="6"></div></div>
+<div class="row"><div><label>Infill (%)</label><input id="infill" type="number" value="20" min="0" max="100"></div><div><label>Motif</label><select id="pattern"><option>Grid</option><option>Lines</option><option>Honeycomb</option></select></div></div>
+<label class="check"><input id="supports" type="checkbox"> Supports automatiques</label>
+</div>
+
+<div class="section">
+<div class="title">Matériau</div>
+<div class="row"><div><label>Filament</label><select id="material"><option>PLA</option><option>PETG</option><option>ABS</option></select></div><div><label>Temp. (°C)</label><input id="temp" type="number" value="200"></div></div>
+</div>
+</aside>
+
+<section class="panel">
+<div class="viewer">
+<canvas id="view"></canvas>
+<div class="viewbar"><span class="pill" id="modelTag">Démo cube · 20 × 20 × 20 mm</span><span class="pill" id="modeTag">Objet</span></div>
+<div class="viewcontrols"><button class="vbtn" id="fit">Ajuster</button><button class="vbtn" id="home">Vue initiale</button></div>
+</div>
+<div class="bottom"><span style="font-size:11px;color:#8fa0ba">Progression</span><div class="progress"><i id="progress"></i></div><span id="status" style="font-size:11px;color:#9eacc6">Prêt</span></div>
+</section>
+
+<aside class="right">
+<div class="panel pad">
+<div class="title">Analyse du slicing</div>
+<div class="statgrid">
+<div class="stat"><small>Hauteur</small><strong id="height">20 mm</strong></div>
+<div class="stat"><small>Couches</small><strong id="layers">100</strong></div>
+<div class="stat"><small>Filament</small><strong id="grams">4.2 g</strong></div>
+<div class="stat"><small>Longueur</small><strong id="meters">1.4 m</strong></div>
+<div class="stat"><small>Temps</small><strong id="time">18 min</strong></div>
+<div class="stat"><small>Coût</small><strong id="cost">0.11 €</strong></div>
+</div>
+<button class="bigbtn" id="sliceBtn">▶ Générer le slicing</button>
+<button class="btn secondary full" id="gcode" style="margin-top:9px">↓ Exporter le G-code</button>
+<div class="layer"><div class="layerhead"><span>Aperçu de couche</span><b id="layerText">Couche 50 / 100</b></div><input id="slider" type="range" min="1" max="100" value="50"></div>
+<div class="info">Prototype de slicer web : l'aperçu et le G-code sont simplifiés. Vérifie toujours le fichier généré et utilise les profils recommandés par le fabricant avant une impression réelle.</div>
+</div>
+
+<div class="panel pad history">
+<div class="title">Dernières opérations</div>
+<div class="historyitem"><span class="badge">Prêt</span><strong>Démo cube</strong><span class="muted">PLA · 0.20 mm · 20%</span></div>
+<div class="historyitem"><strong id="historyName">Aucune nouvelle impression</strong><span class="muted">Les projets restent dans cette page.</span></div>
+</div>
+</aside>
+</main>
+<footer>Print3D Studio · Slicer HTML autonome · 2026</footer>
+<div id="toast" class="toast">Slicing terminé</div>
+
+<script>
+const $=id=>document.getElementById(id), canvas=$('view'),ctx=canvas.getContext('2d');
+let model={name:'Démo cube',w:20,d:20,h:20,tri:12}, ax=-.35, ay=.55, zoom=1, drag=false,lx=0,ly=0;
+
+function resize(){canvas.width=canvas.clientWidth*devicePixelRatio;canvas.height=canvas.clientHeight*devicePixelRatio;draw()} window.addEventListener('resize',resize);
+const V=[[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const F=[[0,1,2],[0,2,3],[4,6,5],[4,7,6],[0,4,5],[0,5,1],[2,6,7],[2,7,3],[0,3,7],[0,7,4],[1,5,6],[1,6,2]];
+function P(v){let[x,y,z]=v,cy=Math.cos(ay),sy=Math.sin(ay),cx=Math.cos(ax),sx=Math.sin(ax),X=x*cy-z*sy,Z=x*sy+z*cy,Y=y*cx-Z*sx;Z=y*sx+Z*cx;let s=Math.min(canvas.width,canvas.height)*.18*zoom;return[canvas.width/2+X*s,canvas.height/2-Y*s,Z]}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);let p=V.map(P);F.map((f,i)=>({f,z:(p[f[0]][2]+p[f[1]][2]+p[f[2]][2])/3})).sort((a,b)=>a.z-b.z).forEach(o=>{let f=o.f;ctx.beginPath();ctx.moveTo(...p[f[0]]);ctx.lineTo(...p[f[1]]);ctx.lineTo(...p[f[2]]);ctx.closePath();ctx.fillStyle='rgba(114,167,255,.25)';ctx.fill();ctx.strokeStyle='#8ebaff';ctx.stroke()})}
+canvas.onpointerdown=e=>{drag=true;lx=e.clientX;ly=e.clientY;canvas.setPointerCapture(e.pointerId)};canvas.onpointerup=()=>drag=false;
+canvas.onpointermove=e=>{if(!drag)return;ay+=(e.clientX-lx)*.01;ax+=(e.clientY-ly)*.01;lx=e.clientX;ly=e.clientY;draw()};
+canvas.onwheel=e=>{e.preventDefault();zoom*=e.deltaY<0?1.08:.92;zoom=Math.max(.45,Math.min(3,zoom));draw()};
+$('home').onclick=()=>{ax=-.35;ay=.55;zoom=1;draw()};$('fit').onclick=()=>{zoom=1;draw()};
+
+function estimate(){
+ let lh=+$('layer').value||.2, inf=+$('infill').value||0, speed=60, layers=Math.max(1,Math.ceil(model.h/lh));
+ let grams=model.w*model.d*model.h*(.11+inf/100*.55)*.00125*(1+(+$('walls').value-2)*.08);
+ let mins=layers*.34+grams*1.8;
+ $('height').textContent=model.h.toFixed(0)+' mm';$('layers').textContent=layers;
+ $('grams').textContent=grams.toFixed(1)+' g';$('meters').textContent=(grams/1.24).toFixed(1)+' m';
+ $('time').textContent=Math.max(1,Math.round(mins))+' min';$('cost').textContent=(grams*.026).toFixed(2)+' €';
+ $('slider').max=layers;$('slider').value=Math.min(+$('slider').value,layers);$('layerText').textContent='Couche '+$('slider').value+' / '+layers;
+}
+$('slider').oninput=()=>{$('layerText').textContent='Couche '+$('slider').value+' / '+$('slider').max;$('modeTag').textContent='Couche '+$('slider').value};
+document.querySelectorAll('input,select').forEach(e=>e.addEventListener('input',estimate));
+
+$('file').onchange=async e=>{let f=e.target.files[0];if(!f)return;$('filename').textContent=f.name;model.name=f.name;model.tri=Math.max(1,Math.round(f.size/50));$('modelTag').textContent=f.name+' · STL importé';$('historyName').textContent=f.name;toast('Modèle importé');estimate()};
+function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1800)}
+$('sliceBtn').onclick=()=>{let b=$('sliceBtn'),p=$('progress'),s=$('status');b.disabled=true;s.textContent='Slicing…';p.style.width='0%';let n=0,t=setInterval(()=>{n+=10;p.style.width=n+'%';if(n>=100){clearInterval(t);b.disabled=false;s.textContent='Terminé';toast('Slicing terminé')}} ,80)};
+$('gcode').onclick=()=>{let lh=+$('layer').value||.2,layers=Math.max(1,Math.ceil(model.h/lh)),temp=+$('temp').value||200,g='; Print3D Studio — G-code prototype\\n; Vérifier avant impression réelle\\nG21\\nG90\\nM104 S'+temp+'\\nM109 S'+temp+'\\nG28\\n';for(let i=1;i<=layers;i++){let z=i*lh;g+=';LAYER:'+i+'\\nG1 Z'+z.toFixed(2)+' F300\\nG1 X0 Y0 F3600\\nG1 X20 Y0 E0.5\\nG1 X20 Y20 E0.5\\nG1 X0 Y20 E0.5\\nG1 X0 Y0 E0.5\\n'}g+='M104 S0\\nM84\\n';let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([g],{type:'text/plain'}));a.download='print3d_studio.gcode';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('G-code exporté')};
+resize();estimate();
+</script>
+</body>
+</html>
