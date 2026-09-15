@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Print3D — Boutique</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#070b16;color:#f5f7ff;font-family:Inter,Arial,sans-serif}
+header{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:#0b1020;border-bottom:1px solid #202a43;position:sticky;top:0;z-index:20}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1px}.logo span{color:#7c9cff}.nav a{color:#c8d1e5;text-decoration:none;margin:0 12px}.actions{display:flex;gap:9px}.iconbtn{border:1px solid #2d3956;background:#11182b;color:#fff;border-radius:10px;padding:9px 12px;cursor:pointer}
+.hero{max-width:1200px;margin:auto;padding:90px 6% 75px;display:grid;grid-template-columns:1.15fr .85fr;gap:50px;align-items:center}
+.badge{display:inline-block;padding:7px 11px;border:1px solid #33415f;border-radius:99px;color:#aebeff;background:#10182d;font-size:13px}
+h1{font-size:60px;line-height:1.02;letter-spacing:-2px;margin:17px 0}.hero p{font-size:19px;line-height:1.65;color:#aab6ce;max-width:650px}.buttons{display:flex;gap:12px;margin-top:25px}
+.btn{border:0;border-radius:11px;padding:13px 18px;background:#7c9cff;color:#07101f;font-weight:800;cursor:pointer;text-decoration:none}.btn.alt{background:#18233c;color:#eef2ff;border:1px solid #2d3a58}
+.visual{min-height:360px;border:1px solid #2d3956;border-radius:28px;background:radial-gradient(circle at 50% 35%,#25365d,#10172a 45%,#090e1c);display:grid;place-items:center;box-shadow:0 30px 80px #0007}.printer{width:230px;height:190px;border:7px solid #6e7da1;border-radius:14px;position:relative}.printer:before{content:"";position:absolute;left:30px;right:30px;top:25px;height:6px;background:#91aaff}.printer:after{content:"";position:absolute;left:72px;top:35px;width:75px;height:95px;border:3px solid #7c9cff;border-top:0;border-radius:0 0 8px 8px}
+.section{max-width:1200px;margin:auto;padding:35px 6% 75px}.section h2{font-size:31px;margin-bottom:24px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#0f1629;border:1px solid #26324d;border-radius:17px;padding:20px}.card h3{margin:10px 0}.card p{color:#9eabc2;line-height:1.5}.price{font-size:25px;font-weight:900;margin:14px 0;color:#a1b2ff}.product-img{height:170px;border-radius:12px;background:linear-gradient(135deg,#17213a,#0a1020);display:grid;place-items:center;font-size:62px}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:20px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;color:#aeb9d0;font-size:14px;margin:11px 0 6px}input,select{width:100%;padding:12px;border-radius:9px;border:1px solid #33415e;background:#080e1c;color:#fff}.result{padding:22px;border-radius:14px;background:#080e1c}.total{font-size:44px;font-weight:900;color:#9cafFF}.line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #202a43}
+footer{padding:28px 6%;border-top:1px solid #202a43;color:#74819a}.modal{display:none;position:fixed;inset:0;background:#0009;z-index:50;place-items:center;padding:20px}.modal.open{display:grid}.modalbox{width:min(520px,100%);background:#10172a;border:1px solid #34415f;border-radius:18px;padding:25px;position:relative}.close{position:absolute;right:15px;top:12px;background:none;border:0;color:#fff;font-size:25px;cursor:pointer}
+.cartrow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #27314d}.empty{color:#8d99b0}.admin{display:none}.admin.open{display:block}.order{padding:15px;border:1px solid #2a3753;border-radius:12px;margin:10px 0;background:#0b1222}.small{font-size:13px;color:#8996ae}
+@media(max-width:850px){.hero,.calc{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}h1{font-size:43px}.nav{display:none}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.hero{padding-top:55px}.hero h1{font-size:39px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">Print<span>3D</span></div>
+<nav class="nav"><a href="#boutique">Boutique</a><a href="#prix">Prix</a><a href="#contact">Contact</a></nav>
+<div class="actions"><button class="iconbtn" onclick="openModal('login')">👤 Compte</button><button class="iconbtn" onclick="openModal('cart')">🛒 <span id="cartCount">0</span></button></div>
+</header>
+
+<section class="hero">
+<div><span class="badge">✨ Impression 3D nouvelle génération</span><h1>Transforme tes idées en objets.</h1><p>Découvre les créations Print3D, calcule ton prix et commande simplement depuis ton téléphone ou ton ordinateur.</p><div class="buttons"><a class="btn" href="#boutique">Voir la boutique</a><a class="btn alt" href="#prix">Calculer un prix</a></div></div>
+<div class="visual"><div class="printer"></div></div>
+</section>
+
+<section class="section" id="boutique">
+<h2>🛒 Nos créations</h2>
+<div class="grid">
+<div class="card"><div class="product-img">📱</div><h3>Support téléphone</h3><p>Support compact imprimé en 3D.</p><div class="price">8,90 €</div><button class="btn" onclick="add('Support téléphone',8.9)">Ajouter au panier</button></div>
+<div class="card"><div class="product-img">📦</div><h3>Boîte personnalisée</h3><p>Boîte pratique pour petits objets.</p><div class="price">12,90 €</div><button class="btn" onclick="add('Boîte personnalisée',12.9)">Ajouter au panier</button></div>
+<div class="card"><div class="product-img">🧩</div><h3>Kit découverte</h3><p>Une sélection de petites créations Print3D.</p><div class="price">14,90 €</div><button class="btn" onclick="add('Kit découverte',14.9)">Ajouter au panier</button></div>
+</div>
+</section>
+
+<section class="section" id="prix">
+<h2>🧮 Calculateur</h2>
+<div class="calc"><div class="card"><div class="row">
+<div><label>Poids (g)</label><input id="w" type="number" value="80"></div><div><label>Temps (h)</label><input id="h" type="number" step=".1" value="3"></div>
+<div><label>Filament (€/kg)</label><input id="f" type="number" value="22"></div><div><label>Machine (€/h)</label><input id="m" type="number" step=".1" value="1.5"></div>
+<div><label>Préparation (€)</label><input id="p" type="number" step=".5" value="1.5"></div><div><label>Marge (%)</label><input id="r" type="number" value="30"></div>
+</div></div>
+<div class="result"><div>Prix estimatif</div><div class="total" id="total">0,00 €</div><div class="line"><span>Filament</span><span id="mat">0,00 €</span></div><div class="line"><span>Machine</span><span id="mac">0,00 €</span></div><div class="line"><span>Préparation</span><span id="prv">0,00 €</span></div><div class="line"><span>Marge</span><span id="marv">0,00 €</span></div><p class="small">Estimation uniquement.</p></div></div>
+</section>
+
+<section class="section" id="contact"><h2>📨 Contact</h2><div class="card"><p>Une question sur une commande ? Écris-nous depuis ton application email.</p><a class="btn" href="mailto:?subject=Contact%20Print3D">Contacter Print3D</a></div></section>
+
+<footer>Print3D © 2026 — Boutique et commandes. <button class="iconbtn" onclick="admin()">Admin</button></footer>
+
+<div class="modal" id="login"><div class="modalbox"><button class="close" onclick="closeModal('login')">×</button><h2>👤 Mon compte</h2><p class="small">Démo locale : les comptes réels nécessitent une base de données et un serveur sécurisé.</p><label>Email</label><input id="loginEmail" type="email" placeholder="ton@email.com"><label>Mot de passe</label><input id="loginPass" type="password" placeholder="••••••••"><button class="btn" style="margin-top:16px" onclick="demoLogin()">Se connecter</button><p id="loginMsg" class="small"></p></div></div>
+
+<div class="modal" id="cart"><div class="modalbox"><button class="close" onclick="closeModal('cart')">×</button><h2>🛒 Mon panier</h2><div id="cartItems"></div><h3 id="cartTotal">Total : 0,00 €</h3><button class="btn" onclick="checkout()">Passer commande</button><p class="small">Le paiement réel n'est pas connecté dans cette version.</p></div></div>
+
+<div class="modal" id="adminModal"><div class="modalbox"><button class="close" onclick="closeModal('adminModal')">×</button><h2>🔐 Espace administrateur</h2><div id="adminArea"></div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+let cart=JSON.parse(localStorage.getItem('print3d_cart')||'[]');
+let orders=JSON.parse(localStorage.getItem('print3d_orders')||'[]');
+
+function euro(n){return n.toLocaleString('fr-BE',{style:'currency',currency:'EUR'})}
+function calc(){let w=+$('w').value||0,h=+$('h').value||0,f=+$('f').value||0,m=+$('m').value||0,p=+$('p').value||0,r=+$('r').value||0;let mat=w/1000*f,mac=h*m,base=mat+mac+p,profit=base*r/100,total=base+profit;$('mat').textContent=euro(mat);$('mac').textContent=euro(mac);$('prv').textContent=euro(p);$('marv').textContent=euro(profit);$('total').textContent=euro(total)}
+['w','h','f','m','p','r'].forEach(x=>$(x).addEventListener('input',calc));
+
+function add(name,price){cart.push({name,price});save();renderCart();alert(name+' a été ajouté au panier.')}
+function save(){localStorage.setItem('print3d_cart',JSON.stringify(cart));localStorage.setItem('print3d_orders',JSON.stringify(orders))}
+function renderCart(){ $('cartCount').textContent=cart.length; let box=$('cartItems'); if(!cart.length){box.innerHTML='<p class="empty">Ton panier est vide.</p>'; $('cartTotal').textContent='Total : 0,00 €';return} let total=0;box.innerHTML=cart.map((x,i)=>{total+=x.price;return `<div class="cartrow"><span>${x.name}</span><b>${euro(x.price)}</b><button class="iconbtn" onclick="removeItem(${i})">×</button></div>`}).join('');$('cartTotal').textContent='Total : '+euro(total)}
+function removeItem(i){cart.splice(i,1);save();renderCart()}
+function checkout(){if(!cart.length){alert('Ton panier est vide.');return}let total=cart.reduce((a,x)=>a+x.price,0);let order={id:'P3D-'+Date.now().toString().slice(-6),date:new Date().toLocaleString('fr-BE'),items:[...cart],total,status:'Nouvelle'};orders.push(order);cart=[];save();renderCart();closeModal('cart');alert('Commande '+order.id+' enregistrée dans cette démo.')}
+function openModal(id){$(id).classList.add('open');if(id==='cart')renderCart()}
+function closeModal(id){$(id).classList.remove('open')}
+function demoLogin(){let email=$('loginEmail').value.trim();if(!email){$('loginMsg').textContent='Entre une adresse email.';return}$('loginMsg').textContent='Connexion de démonstration réussie pour '+email+'.'}
+function admin(){openModal('adminModal');let a=$('adminArea');if(!orders.length){a.innerHTML='<p class="empty">Aucune commande pour le moment.</p>';return}a.innerHTML=orders.map(o=>`<div class="order"><b>${o.id}</b><br><span class="small">${o.date} · ${o.status}</span><p>${o.items.map(i=>i.name+' — '+euro(i.price)).join('<br>')}</p><b>Total : ${euro(o.total)}</b></div>`).join('')}
+calc();renderCart();
+</script>
+</body>
+</html>
